@@ -61,14 +61,14 @@ public struct FloatingButton<MainView, ButtonView>: View where MainView: View, B
         self.isOpenBinding = isOpenBinding
     }
     
-    public init(mainButtonView: MainView, buttons: [ButtonView]) {
+    public init(mainButtonView: MainView, buttons: [(ButtonView, () -> Void)]) {
         self.mainButtonView = mainButtonView
-        self.buttons = buttons.map { SubmenuButton(buttonView: $0) }
+        self.buttons = buttons.map { SubmenuButton(buttonView: $0, action: $1) }
     }
     
-    public init(mainButtonView: MainView, buttons: [ButtonView], isOpen: Binding<Bool>) {
+    public init(mainButtonView: MainView, buttons: [(ButtonView, () -> Void)], isOpen: Binding<Bool>) {
         self.mainButtonView = mainButtonView
-        self.buttons = buttons.map { SubmenuButton(buttonView: $0) }
+        self.buttons = buttons.map { SubmenuButton(buttonView: $0, action: $1) }
         self.isOpenBinding = isOpen
     }
     
