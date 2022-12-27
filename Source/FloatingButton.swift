@@ -55,21 +55,10 @@ public struct FloatingButton<MainView, ButtonView>: View where MainView: View, B
     @State private var sizes: [CGSize] = []
     @State private var mainButtonFrame = CGRect()
     
-    private init(mainButtonView: MainView, buttons: [SubmenuButton<ButtonView>], isOpenBinding: Binding<Bool>?) {
+    public init(mainButtonView: MainView, buttons: [SubmenuButton<ButtonView>], isOpen isOpenBinding: Binding<Bool>? = nil) {
         self.mainButtonView = mainButtonView
         self.buttons = buttons
         self.isOpenBinding = isOpenBinding
-    }
-    
-    public init(mainButtonView: MainView, buttons: [(ButtonView, () -> Void)]) {
-        self.mainButtonView = mainButtonView
-        self.buttons = buttons.map { SubmenuButton(buttonView: $0, action: $1) }
-    }
-    
-    public init(mainButtonView: MainView, buttons: [(ButtonView, () -> Void)], isOpen: Binding<Bool>) {
-        self.mainButtonView = mainButtonView
-        self.buttons = buttons.map { SubmenuButton(buttonView: $0, action: $1) }
-        self.isOpenBinding = isOpen
     }
     
     public var body: some View {
@@ -323,13 +312,20 @@ public extension FloatingButtonGeneric where T: CircleFloatingButton {
     }
 }
 
-struct SubmenuButton<ButtonView: View>: View {
+public struct SubmenuButton<ButtonView: View>: View {
     
     var buttonView: ButtonView
-    var action: () -> Void = { }
+    var action: (() -> Void)?
     
-    var body: some View {
-        Button(action: { action() }) {
+    public init(buttonView: ButtonView, action: (() -> Void)? = nil) {
+        self.buttonView = buttonView
+        self.action = action
+    }
+    
+    public var body: some View {
+        Button(action: {
+            action?()
+        }) {
             buttonView
         }
         .buttonStyle(PlainButtonStyle())
